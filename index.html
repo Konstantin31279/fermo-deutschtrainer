@@ -1,0 +1,107 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173f38"><title>FERMO Deutschtrainer – Woche 1</title><style>
+:root{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#182923;background:#f2f6f3}*{box-sizing:border-box}body{margin:0}.wrap{max-width:520px;margin:auto;padding:18px 14px 44px}header{display:flex;gap:13px;align-items:center;margin:8px 0 22px}header .emoji{font-size:39px}h1{font-size:23px;margin:0}h2{font-size:21px;margin:0 0 8px}.sub{color:#60736b;font-size:14px}.card{background:white;border:1px solid #d9e4dd;border-radius:17px;padding:18px;margin-bottom:13px;box-shadow:0 2px 8px #183d2510}button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #e2a93a;outline-offset:2px}.day,.choice{display:flex;align-items:center;text-align:left;gap:13px;width:100%;background:white;color:#182923;border:1px solid #d4e0d8;border-radius:13px;padding:15px;margin:9px 0;min-height:56px}.day:hover,.choice:hover:not(:disabled){border-color:#267b60}.number{display:grid;place-items:center;min-width:40px;height:40px;border-radius:11px;background:#e6f1e9;font-weight:750}.day strong{display:block}.day small{color:#60736b;display:block;margin-top:4px}.arrow{margin-left:auto;color:#60736b}.primary{background:#176b50;color:white;border:0;border-radius:12px;padding:15px;font-weight:700;width:100%;margin:7px 0;min-height:50px}.secondary{background:white;color:#173f38;border:1px solid #bdcfc4;border-radius:12px;padding:12px 15px;font-weight:650;margin:6px 0}.wide{width:100%}.choice{font-size:17px;line-height:1.35}.choice:disabled{cursor:default;opacity:1}.choice.correct{background:#e0f4e8;border:2px solid #23824d}.choice.incorrect{background:#fff0ed;border:2px solid #c14c43}.progress{height:9px;background:#dce9df;border-radius:10px;overflow:hidden;margin:12px 0 19px}.progress>div{height:100%;background:#278566;transition:width .2s}.between{display:flex;align-items:center;justify-content:space-between;gap:10px}.question{font-size:22px;font-weight:750;line-height:1.35;margin:16px 0 19px}.feedback{border-radius:12px;padding:14px;margin-top:13px;line-height:1.5}.feedback.good{background:#e0f4e8}.feedback.bad{background:#fff0ed}.feedback strong{display:block}.hidden{display:none!important}.center{text-align:center}.big{font-size:38px}.note{font-size:13px;color:#60736b;line-height:1.5}footer{text-align:center;margin-top:18px}.pill{font-size:12px;font-weight:700;color:#27654f;background:#e6f1e9;border-radius:30px;padding:6px 10px}#answerList{margin:0;padding:0;list-style:none}#answerList li{margin:0}.stats{font-size:24px;font-weight:800;margin:14px 0}@media(prefers-reduced-motion:reduce){.progress>div{transition:none}}
+</style></head><body><main class="wrap"><header><div class="emoji" aria-hidden="true">👷‍♂️</div><div><h1>Deutsch auf der Baustelle</h1><div class="sub">FERMO · Gruppe 2 · Woche 1</div></div></header>
+<section id="home"><div class="card"><h2>Dein Wochenprogramm</h2><p>Jeden Tag <b>10 Pflichtaufgaben</b> und danach, wenn du möchtest, <b>5 Zusatzaufgaben</b>.</p><div class="sub">Wähle einen Tag. Du kannst alles beliebig oft üben.</div></div><div id="days"></div><footer class="note">Ohne Anmeldung · Keine Noten · Sofortige Rückmeldung</footer></section>
+<section id="play" class="hidden"><div class="between"><button class="secondary" id="back">‹ Übersicht</button><span id="count" class="sub"></span></div><div class="progress" role="progressbar" aria-label="Fortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><div id="bar" style="width:0"></div></div><div class="card"><div id="topic" class="sub"></div><div id="prompt" class="question"></div><ul id="answerList"></ul><div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div></div><button class="primary hidden" id="next">Nächste Aufgabe</button></section>
+<section id="milestone" class="card center hidden"><div class="big">🎉</div><h2>Pflichttraining geschafft!</h2><div class="stats" id="basicScore"></div><p>Du hast zehn Aufgaben bearbeitet. Gut gemacht!</p><button class="primary" id="bonus">5 Zusatzaufgaben üben</button><button class="secondary wide" id="again">Pflichttraining wiederholen</button><button class="secondary wide" id="menu1">Zur Übersicht</button></section>
+<section id="finish" class="card center hidden"><div class="big">🏆</div><h2>Zusatztraining geschafft!</h2><div class="stats" id="totalScore"></div><button class="primary" id="repeat">Training wiederholen</button><button class="secondary wide" id="menu2">Zur Übersicht</button></section><footer class="note">FERMO-Deutschtrainer · Übungen für den Berufsalltag auf der Baustelle</footer></main>
+<script>
+'use strict';
+// q(prompt, choices, correctIndex, explanation). Every item is manually checked for a single intended answer.
+const q=(p,a,b,c,k,e)=>({p,opts:[a,b,c],k,e});
+const days=[
+{title:'Präsens – ich, du, er, sie',subtitle:'Verbformen im Singular',items:[
+q('Ich ___ heute eine Wand.','mauere','mauert','mauern',0,'Ich mauere heute eine Wand. (ich → mauere)'),
+q('Du ___ mit dem Bagger.','arbeitet','arbeitest','arbeiten',1,'Du arbeitest mit dem Bagger. (du → arbeitest)'),
+q('Er ___ einen Hammer.','brauche','brauchst','braucht',2,'Er braucht einen Hammer. (er → braucht)'),
+q('Ich ___ die Bewehrung.','binde','bindet','binden',0,'Ich binde die Bewehrung. (ich → binde)'),
+q('Du ___ den Beton.','mischt','mische','mischst',2,'Du mischst den Beton. (du → mischst)'),
+q('Sie (eine Person) ___ die Schalung.','kontrolliere','kontrolliert','kontrollieren',1,'Sie kontrolliert die Schalung. (sie → kontrolliert)'),
+q('Ich ___ die Werkzeuge.','hole','holt','holen',0,'Ich hole die Werkzeuge. (ich → hole)'),
+q('Du ___ eine Wand.','mauert','mauerst','mauere',1,'Du mauerst eine Wand. (du → mauerst)'),
+q('Er ___ heute die Decke.','betonieren','betoniere','betoniert',2,'Er betoniert heute die Decke. (er → betoniert)'),
+q('Ich ___ den Arbeitsplatz auf.','räume','räumt','räumen',0,'Ich räume den Arbeitsplatz auf. (aufräumen → ich räume ... auf)'),
+q('Heute ___ ich mit dem Bagger.','arbeitet','arbeite','arbeiten',1,'Heute arbeite ich mit dem Bagger.'),
+q('Du ___ die Schalung vor.','bereitest','bereitet','bereiten',0,'Du bereitest die Schalung vor.'),
+q('Er ___ die Erde auf.','laden','lädt','ladet',1,'Er lädt die Erde auf. (laden → er lädt)'),
+q('Sie (eine Person) ___ die Bewehrung.','bindet','binden','bindest',0,'Sie bindet die Bewehrung.'),
+q('Ich ___ die Wasserwaage.','brauchen','braucht','brauche',2,'Ich brauche die Wasserwaage.')
+]},
+{title:'Präsens – wir, ihr, sie',subtitle:'Verbformen im Plural',items:[
+q('Wir ___ ein Fundament.','betoniert','betonieren','betoniere',1,'Wir betonieren ein Fundament.'),
+q('Ihr ___ die Werkzeuge.','holt','holen','holst',0,'Ihr holt die Werkzeuge.'),
+q('Die Kollegen ___ die Bewehrung.','bindet','binden','binde',1,'Die Kollegen binden die Bewehrung.'),
+q('Wir ___ die Schalung vor.','bereiten','bereitet','bereitest',0,'Wir bereiten die Schalung vor.'),
+q('Ihr ___ den Arbeitsplatz auf.','räumen','räumt','räumst',1,'Ihr räumt den Arbeitsplatz auf.'),
+q('Die Arbeiter ___ mit dem Bagger.','arbeitet','arbeiten','arbeitest',1,'Die Arbeiter arbeiten mit dem Bagger.'),
+q('Wir ___ den Beton.','mischen','mischt','mischst',0,'Wir mischen den Beton.'),
+q('Ihr ___ eine Wand.','mauern','mauert','mauerst',1,'Ihr mauert eine Wand.'),
+q('Die Kollegen ___ die Erde auf.','laden','ladet','lädt',0,'Die Kollegen laden die Erde auf.'),
+q('Wir ___ die Wasserwaage.','braucht','brauchen','brauchst',1,'Wir brauchen die Wasserwaage.'),
+q('Heute ___ wir die Decke.','betoniert','betonieren','betoniere',1,'Heute betonieren wir die Decke.'),
+q('Ihr ___ die Bewehrung.','bindet','binden','bindest',0,'Ihr bindet die Bewehrung.'),
+q('Die Mitarbeiter ___ die Schalung.','kontrollieren','kontrolliert','kontrolliere',0,'Die Mitarbeiter kontrollieren die Schalung.'),
+q('Wir ___ den Arbeitsplatz auf.','räumen','räumt','räumst',0,'Wir räumen den Arbeitsplatz auf.'),
+q('Ihr ___ heute mit dem Bagger.','arbeitet','arbeiten','arbeite',0,'Ihr arbeitet heute mit dem Bagger.')
+]},
+{title:'Fachwörter richtig schreiben',subtitle:'Werkzeuge und Materialien',items:[
+q('Welche Schreibweise ist richtig?','Wasserwage','Wasserwaage','Wasserwagge',1,'die Wasserwaage'),
+q('Welche Schreibweise ist richtig?','der Hommer','der Hammer','der Hamer',1,'der Hammer'),
+q('Welche Schreibweise ist richtig?','die Bewehrung','die Bewärung','die Beweerung',0,'die Bewehrung'),
+q('Welche Schreibweise ist richtig?','die Schalunk','die Schallung','die Schalung',2,'die Schalung'),
+q('Welche Schreibweise ist richtig?','das Fundamend','das Fundament','das Fundement',1,'das Fundament'),
+q('Welche Schreibweise ist richtig?','die Abdichtung','die Abdichtunk','die Abtichtung',0,'die Abdichtung'),
+q('Welche Schreibweise ist richtig?','der Betong','der Beton','der Betonn',1,'der Beton'),
+q('Welche Schreibweise ist richtig?','das Werkzeuk','das Werkzeug','das Werkzoug',1,'das Werkzeug'),
+q('Welche Schreibweise ist richtig?','der Bagga','der Bagger','der Bager',1,'der Bagger'),
+q('Welche Schreibweise ist richtig?','der Eima','der Eimer','der Eimmer',1,'der Eimer'),
+q('Welche Schreibweise ist richtig?','die Schauffel','die Schaufel','die Schaufell',1,'die Schaufel'),
+q('Welche Schreibweise ist richtig?','die Kelle','die Kele','die Källe',0,'die Kelle'),
+q('Welche Schreibweise ist richtig?','der Mörtel','der Mördel','der Mörtl',0,'der Mörtel'),
+q('Welche Schreibweise ist richtig?','die Bewährung','die Bewehrung','die Bewerrung',1,'die Bewehrung – mit „eh“, nicht „äh“. '),
+q('Welche Schreibweise ist richtig?','der Arbeitsplatz','der Arbeitzplatz','der Arbeitsplaz',0,'der Arbeitsplatz')
+]},
+{title:'Satzbau – Verb auf Position 2',subtitle:'Sätze richtig ordnen',items:[
+q('Welcher Satz ist richtig?','Heute wir betonieren die Decke.','Heute betonieren wir die Decke.','Heute die Decke wir betonieren.',1,'Heute betonieren wir die Decke.'),
+q('Welcher Satz ist richtig?','Morgen hole ich die Wasserwaage.','Morgen ich hole die Wasserwaage.','Morgen die Wasserwaage hole ich.',0,'Morgen hole ich die Wasserwaage.'),
+q('Beginne mit „Heute“: Wir bereiten heute die Schalung vor.','Heute wir bereiten die Schalung vor.','Heute bereiten wir die Schalung vor.','Heute vor bereiten wir die Schalung.',1,'Heute bereiten wir die Schalung vor.'),
+q('Welcher Satz ist richtig?','Danach wir räumen auf.','Danach räumen wir auf.','Danach aufräumen wir.',1,'Danach räumen wir auf.'),
+q('Beginne mit „Heute“: Ich arbeite heute mit dem Bagger.','Heute ich arbeite mit dem Bagger.','Heute mit dem Bagger ich arbeite.','Heute arbeite ich mit dem Bagger.',2,'Heute arbeite ich mit dem Bagger.'),
+q('Welcher Satz ist richtig?','Zuerst mischen wir den Beton.','Zuerst wir mischen den Beton.','Zuerst den Beton mischen wir.',0,'Zuerst mischen wir den Beton.'),
+q('Welcher Satz ist richtig?','Morgen wir mauern eine Wand.','Morgen mauern wir eine Wand.','Morgen eine Wand wir mauern.',1,'Morgen mauern wir eine Wand.'),
+q('Beginne mit „Danach“: Wir laden danach die Erde auf.','Danach laden wir die Erde auf.','Danach wir laden die Erde auf.','Danach aufladen wir die Erde.',0,'Danach laden wir die Erde auf.'),
+q('Welcher Satz ist richtig?','Heute ihr kontrolliert die Schalung.','Heute kontrolliert ihr die Schalung.','Heute die Schalung kontrolliert ihr.',1,'Heute kontrolliert ihr die Schalung.'),
+q('Beginne mit „Zuerst“: Ich hole zuerst den Hammer.','Zuerst ich hole den Hammer.','Zuerst hole ich den Hammer.','Zuerst den Hammer hole ich.',1,'Zuerst hole ich den Hammer.'),
+q('Welcher Satz ist richtig?','Dann wir binden die Bewehrung.','Dann binden wir die Bewehrung.','Dann die Bewehrung wir binden.',1,'Dann binden wir die Bewehrung.'),
+q('Beginne mit „Morgen“: Ihr räumt morgen auf.','Morgen räumt ihr auf.','Morgen ihr räumt auf.','Morgen aufräumt ihr.',0,'Morgen räumt ihr auf.'),
+q('Welcher Satz ist richtig?','Heute bereitet er die Schalung vor.','Heute er bereitet die Schalung vor.','Heute vorbereitet er die Schalung.',0,'Heute bereitet er die Schalung vor.'),
+q('Beginne mit „Danach“: Wir mischen danach den Beton.','Danach wir mischen den Beton.','Danach mischen wir den Beton.','Danach den Beton wir mischen.',1,'Danach mischen wir den Beton.'),
+q('Welcher Satz ist richtig?','Zuerst sie holen die Werkzeuge.','Zuerst die Werkzeuge sie holen.','Zuerst holen sie die Werkzeuge.',2,'Zuerst holen sie die Werkzeuge.')
+]},
+{title:'Alles wiederholen',subtitle:'Gemischtes Training',items:[
+q('Ich ___ den Arbeitsplatz auf.','räume','räumt','räumen',0,'Ich räume den Arbeitsplatz auf.'),
+q('Ihr ___ die Schalung vor.','bereiten','bereitet','bereitest',1,'Ihr bereitet die Schalung vor.'),
+q('Welche Schreibweise ist richtig?','der Betong','der Beton','der Betonn',1,'der Beton'),
+q('Welcher Satz ist richtig?','Heute wir binden die Bewehrung.','Heute binden wir die Bewehrung.','Heute die Bewehrung binden wir.',1,'Heute binden wir die Bewehrung.'),
+q('Du ___ einen Eimer.','brauche','braucht','brauchst',2,'Du brauchst einen Eimer.'),
+q('Beginne mit „Heute“: Wir laden heute die Erde auf.','Heute wir laden die Erde auf.','Heute laden wir die Erde auf.','Heute aufladen wir die Erde.',1,'Heute laden wir die Erde auf.'),
+q('Welche Schreibweise ist richtig?','die Wasserwage','die Wasserwaage','die Wasserwagge',1,'die Wasserwaage'),
+q('Wir ___ heute die Decke.','betonieren','betoniert','betoniere',0,'Wir betonieren heute die Decke.'),
+q('Welcher Satz ist richtig?','Danach räumen wir auf.','Danach wir räumen auf.','Danach aufräumen wir.',0,'Danach räumen wir auf.'),
+q('Er ___ die Bewehrung.','binden','bindet','bindest',1,'Er bindet die Bewehrung.'),
+q('Ihr ___ mit dem Bagger.','arbeiten','arbeitet','arbeitest',1,'Ihr arbeitet mit dem Bagger.'),
+q('Welche Schreibweise ist richtig?','das Fundamend','das Fundament','das Fundement',1,'das Fundament'),
+q('Beginne mit „Morgen“: Ich hole morgen die Wasserwaage.','Morgen ich hole die Wasserwaage.','Morgen hole ich die Wasserwaage.','Morgen die Wasserwaage hole ich.',1,'Morgen hole ich die Wasserwaage.'),
+q('Sie (Plural) ___ den Beton.','mischt','mischen','mischst',1,'Sie mischen den Beton.'),
+q('Welcher Satz ist richtig?','Heute wir bereiten die Schalung vor.','Heute bereiten wir die Schalung vor.','Heute vorbereitet wir die Schalung.',1,'Heute bereiten wir die Schalung vor.')
+]}];
+let day=0,idx=0,score=0,extra=0,answered=false;
+const $=id=>document.getElementById(id);
+function view(id){['home','play','milestone','finish'].forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'instant'});}
+function home(){const el=$('days');el.replaceChildren();days.forEach((d,i)=>{const b=document.createElement('button');b.className='day';const num=document.createElement('span');num.className='number';num.textContent=i+1;const title=document.createElement('span');const strong=document.createElement('strong');strong.textContent=d.title;const small=document.createElement('small');small.textContent=d.subtitle+' · 10 + 5 Aufgaben';title.append(strong,small);const arrow=document.createElement('span');arrow.className='arrow';arrow.textContent='›';b.append(num,title,arrow);b.addEventListener('click',()=>start(i));el.append(b)});view('home');}
+function start(d){day=d;idx=0;score=0;extra=0;view('play');render();}
+function render(){answered=false;const item=days[day].items[idx];const optional=idx>=10;const position=optional?idx-9:idx+1;const max=optional?5:10;$('count').textContent=(optional?'Zusatz':'Pflicht')+' · '+position+' von '+max;const percent=Math.round(((position-1)/max)*100);$('bar').style.width=percent+'%';$('progress').setAttribute('aria-valuenow',percent);$('topic').textContent='Tag '+(day+1)+' · '+days[day].subtitle;$('prompt').textContent=item.p;$('feedback').className='feedback hidden';$('feedback').replaceChildren();$('next').classList.add('hidden');const list=$('answerList');list.replaceChildren();item.opts.forEach((a,j)=>{const li=document.createElement('li');const b=document.createElement('button');b.className='choice';b.textContent=a;b.addEventListener('click',()=>answer(j));li.append(b);list.append(li);});}
+function answer(j){if(answered)return;answered=true;const item=days[day].items[idx],correct=j===item.k;if(correct){if(idx<10)score++;else extra++;}const buttons=$('answerList').querySelectorAll('button');buttons.forEach((b,k)=>{b.disabled=true;if(k===item.k)b.classList.add('correct');else if(k===j)b.classList.add('incorrect')});const f=$('feedback');f.className='feedback '+(correct?'good':'bad');const title=document.createElement('strong');title.textContent=correct?'✓ Richtig!':'Noch nicht richtig.';const explanation=document.createElement('div');explanation.textContent=item.e;f.append(title,explanation);$('next').classList.remove('hidden');$('next').textContent=idx===9?'Pflichttraining abschließen':idx===14?'Ergebnis ansehen':'Nächste Aufgabe';}
+$('next').addEventListener('click',()=>{if(!answered)return;if(idx===9){$('basicScore').textContent=score+' von 10 richtig';view('milestone');}else if(idx===14){$('totalScore').textContent='Pflicht: '+score+'/10 · Zusatz: '+extra+'/5';view('finish');}else{idx++;render();window.scrollTo({top:0,behavior:'instant'});}});
+$('bonus').addEventListener('click',()=>{idx=10;view('play');render()});$('again').addEventListener('click',()=>start(day));$('repeat').addEventListener('click',()=>start(day));['back','menu1','menu2'].forEach(id=>$(id).addEventListener('click',home));home();
+</script></body></html>
